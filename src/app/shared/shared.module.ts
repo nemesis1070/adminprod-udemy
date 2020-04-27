@@ -4,7 +4,7 @@ import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BreadcrumsComponent } from './breadcrums/breadcrums.component';
 import { NopagefoundComponent } from '../pages/dashboard/nopagefound/nopagefound.component';
-
+import { RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -21,7 +21,8 @@ import { NopagefoundComponent } from '../pages/dashboard/nopagefound/nopagefound
     NopagefoundComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ]
 })
 export class SharedModule { }
