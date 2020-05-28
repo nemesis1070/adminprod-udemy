@@ -4,7 +4,7 @@ import { HttpClient} from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
 /* import 'rxjs/add/operator/map'; */
 import swal from 'sweetalert';
-import { map } from 'rxjs/operators';
+import { map, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
 
@@ -22,8 +22,6 @@ export class UsuarioService {
   }
 
   estaLogeado() {
-
-    console.log(this.token);
     return (this.token.length > 5) ? true : false ;
   }
 
@@ -32,7 +30,6 @@ export class UsuarioService {
       this.token = localStorage.getItem('token');
 
       this.usuario = JSON.parse( localStorage.getItem('usuario') );
-      console.log('data cargada', this.usuario);
     } else {
       this.token = '';
       this.usuario = JSON.parse( localStorage.getItem('usuario') );
@@ -45,6 +42,11 @@ export class UsuarioService {
                     .pipe(map((resp: any) => {
                       return resp.usuarios;
                     }));
+  }
+
+  buscarUsuarios(desde: number = 0) {
+    const url = URL_SERVICIOS + '/usuario?desde=' + desde;
+    return this.http.get(url);
   }
 
   crearUsuario(usuario: Usuario) {
@@ -62,14 +64,17 @@ export class UsuarioService {
   }
 
   actualizarUsuario(usuario: Usuario) {
-    console.log(usuario);
     let url = URL_SERVICIOS + '/usuario/' + usuario.IdUsuario;
     url += '?token=' + this.token;
     return this.http.put(url, usuario)
                     .pipe(map(resp => {
-                      const usuarioDB: Usuario = usuario;
-                      this.guardarStorage(usuarioDB.IdUsuario.toString(), this.token, usuarioDB);
-                      swal('Usuario Actualizado', usuarioDB.Nombre , 'success');
+
+                      if (usuario.IdUsuario === this.usuario.IdUsuario) {
+                        const usuarioDB: Usuario = usuario;
+                        this.guardarStorage(usuarioDB.IdUsuario.toString(), this.token, usuarioDB);
+                      }
+
+                      swal('Usuario Actualizado', usuario.Nombre , 'success');
                       return true;
                     }));
   }
@@ -145,6 +150,21 @@ export class UsuarioService {
                }).catch(resp => {
                 console.log(resp);
                });
+  }
+
+  busquedaUsuarios(termino: string) {
+    const url = URL_SERVICIOS + '/busqueda/coleccion/usuarios/' + termino;
+    return this.http.get(url);
+  }
+
+  borrarUsuario(idUsuario: number) {
+
+    const url = URL_SERVICIOS + '/usuario/' + idUsuario + '?token=' + this.token ;
+    return this.http.delete(url)
+                .pipe(map((resp: any) => {
+                  swal('Usuario Borrado', 'El usuario se elimino correctamente', 'success');
+                  return true;
+                }));
   }
 
 }
