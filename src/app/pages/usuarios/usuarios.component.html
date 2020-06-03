@@ -41,7 +41,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let infUsuario of usuario">
-                            <th class="w70"><img (click)="mostrarModal(infUsuario.IdUsuario)" [src]="infUsuario.Img |imagen" class="img-50 img-circle pointer"></th>
+                            <th class="w70"><img (click)="mostrarModal(infUsuario.IdUsuario)" [src]="infUsuario.Img |imagen:'usuario'" class="img-50 img-circle pointer"></th>
                             <th>{{infUsuario.Email}}</th>
                             <th>{{infUsuario.Nombre}}</th>
                             <th><select [(ngModel)]="infUsuario.Role" name="role" class="form-control">

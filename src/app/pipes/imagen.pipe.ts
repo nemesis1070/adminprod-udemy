@@ -6,7 +6,7 @@ import { URL_SERVICIOS } from '../config/config';
 })
 export class ImagenPipe implements PipeTransform {
 
-  transform(img: string, tipo: string= 'usuario'): any {
+  transform(img: string, tipo: string): any {
 
     let url = URL_SERVICIOS + '/imagenes/';
 
@@ -23,7 +23,7 @@ export class ImagenPipe implements PipeTransform {
       case 'usuario':
         url += 'usuario/' + img;
         break;
-      case 'medicos':
+      case 'medico':
         url += 'medico/' + img;
         break;
       case 'hospital':

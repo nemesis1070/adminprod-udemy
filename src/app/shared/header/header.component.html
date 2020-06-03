@@ -107,12 +107,12 @@
                 <!-- Profile -->
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img [src]="datausuario.Img | imagen" alt="user" class="profile-pic" /></a>
+                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img [src]="datausuario.Img | imagen: 'usuario'" alt="user" class="profile-pic" /></a>
                     <div class="dropdown-menu dropdown-menu-right animated fadeIn">
                         <ul class="dropdown-user">
                             <li>
                                 <div class="dw-user-box" align="center">
-                                    <div class="u-img" align="center"><img [src]="datausuario.Img | imagen" alt="user"></div>
+                                    <div class="u-img" align="center"><img [src]="datausuario.Img |imagen:'usuario'" alt="user"></div>
                                     <div class="u-text">
                                         <h4>{{datausuario.Nombre}}</h4>
                                         <p class="text-muted">{{datausuario.Email}}</p><a routerLink="/perfil" class="btn btn-rounded btn-danger btn-sm">Ver Perfil</a></div>
