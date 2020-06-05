@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Usuario } from '../../models/usuario.model';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
 /* import 'rxjs/add/operator/map'; */
 import swal from 'sweetalert';
-import { map, retry } from 'rxjs/operators';
+import { map , catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subir-archivo/subir-archivo.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +19,7 @@ export class UsuarioService {
   usuario: Usuario;
   token: string;
   Email: string;
+  menu: any[] = [];
 
   constructor(public http: HttpClient, public router: Router, public serSub: SubirArchivoService) {
     this.cargarStorage();
@@ -28,11 +32,12 @@ export class UsuarioService {
   cargarStorage() {
     if (localStorage.getItem('token')) {
       this.token = localStorage.getItem('token');
-
       this.usuario = JSON.parse( localStorage.getItem('usuario') );
+      this.menu = JSON.parse( localStorage.getItem('menu') );
     } else {
       this.token = '';
       this.usuario = JSON.parse( localStorage.getItem('usuario') );
+      this.menu = [];
     }
   }
 
@@ -59,7 +64,10 @@ export class UsuarioService {
         text: res.usuarios,
         icon: 'success',
       });
-    }));
+    }), catchError((error: HttpErrorResponse) => {
+        swal('Error creacion usuario', 'Validacion de usuario fallida: ' + error.error.mensaje , 'error');
+        return throwError(error);
+  }));
 
   }
 
@@ -71,29 +79,35 @@ export class UsuarioService {
 
                       if (usuario.IdUsuario === this.usuario.IdUsuario) {
                         const usuarioDB: Usuario = usuario;
-                        this.guardarStorage(usuarioDB.IdUsuario.toString(), this.token, usuarioDB);
+                        this.guardarStorage(usuarioDB.IdUsuario.toString(), this.token, usuarioDB, this.menu);
                       }
-
                       swal('Usuario Actualizado', usuario.Nombre , 'success');
                       return true;
-                    }));
+                    }), catchError((error: HttpErrorResponse) => {
+                      return throwError(error);
+                }));
   }
 
-  guardarStorage(id: string, token: string, usuario: Usuario) {
+  guardarStorage(id: string, token: string, usuario: Usuario , menu: any) {
 
     localStorage.setItem('id', id);
     localStorage.setItem('token', token);
     localStorage.setItem('usuario', JSON.stringify(usuario));
+    localStorage.setItem('menu', JSON.stringify(menu));
     this.usuario = usuario;
     this.token = token;
+    this.menu = menu;
   }
 
   LogOut() {
     this.usuario = null;
     this.token = '';
+    this.menu = [];
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     localStorage.removeItem('dataUsuario');
+    localStorage.removeItem('id');
+    localStorage.removeItem('menu');
     this.router.navigate(['/login']);
   }
 
@@ -102,6 +116,7 @@ export class UsuarioService {
     const url = URL_SERVICIOS + '/login/google';
     return this.http.post(url, {token})
                     .pipe(map((resp: any) => {
+                         console.log(resp);
                           // forma para llenar una objeto opcion 1
                          const data: Usuario = {
                             Nombre: resp.datos[0].Nombre,
@@ -114,7 +129,7 @@ export class UsuarioService {
                         // forma para llenar una objeto opcion 2
                         // tslint:disable-next-line: max-line-length
                         // this.dataUsuario = new Usuario(resp.datos[0].Nombre, resp.datos[0].Email, resp.datos[0].Password, resp.datos[0].Img, resp.datos[0].Role, resp.datos[0].Google, resp.datos[0].IdUsuario);
-                         this.guardarStorage(resp.datos[0].IdUsuario, resp.Token, data);
+                         this.guardarStorage(resp.datos[0].IdUsuario, resp.Token, data, resp.menu);
                         /* localStorage.setItem('dataUsuario', item); */
                          return true;
                     }));
@@ -131,8 +146,12 @@ export class UsuarioService {
     const url = URL_SERVICIOS + '/login';
     return this.http.post(url, usuario)
                .pipe(map((resp: any) => {
-                    this.guardarStorage(resp.mensaje.IdUsuario, resp.Token, resp.mensaje);
+                    console.log(resp);
+                    this.guardarStorage(resp.mensaje.IdUsuario, resp.Token, resp.mensaje, resp.menu);
                     return true;
+                }), catchError((error: HttpErrorResponse) => {
+                    swal('Error en el Login', error.error.mensaje , 'error');
+                    return throwError(error);
                 }));
   }
 
@@ -144,7 +163,7 @@ export class UsuarioService {
                 this.buscarUsuarioPorId(id).subscribe((res: any) => {
                   const usuarioDB: Usuario = res[0];
                   usuarioDB.Password = '';
-                  this.guardarStorage(id, this.token, usuarioDB);
+                  this.guardarStorage(id, this.token, usuarioDB, this.menu);
                   swal('Imagen Actualizada', usuarioDB.Nombre , 'success');
                 });
                }).catch(resp => {

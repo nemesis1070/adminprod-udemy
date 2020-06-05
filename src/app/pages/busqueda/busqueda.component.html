@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Usuarios</h4>
+                <table class="table table-hover">
+                    <tbody [routerLink]="['/usuarios']" *ngFor="let usuario of usuarios" class="pointer">
+                        <tr>
+                            <th class="w70 "><img [src]="usuario.Img |imagen:'usuario' " class="img-50 img-circle "></th>
+                            <td>{{usuario.Nombre}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-info" *ngIf="usuarios.length === 0">
+                    No hay Registros
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Hospitales</h4>
+                <table class="table table-hover">
+                    <tbody [routerLink]="['/hospitales']" *ngFor="let hospital of hospitales" class="pointer">
+                        <tr>
+                            <th class="w70 "><img [src]="hospital.Img |imagen:'hospital' " class="img-50 img-circle "></th>
+                            <td>{{hospital.Nombre}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-info" *ngIf="hospitales.length === 0">
+                    No hay Registros
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Medicos</h4>
+                <table class="table table-hover">
+                    <tbody [routerLink]="['/medico',medico.IdMedicos]" *ngFor="let medico of medicos" class="pointer">
+                        <tr>
+                            <th class="w70 "><img [src]="medico.Img |imagen:'medico' " class="img-50 img-circle "></th>
+                            <td>{{medico.Nombre}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="alert alert-info" *ngIf="medicos.length === 0">
+                    No hay Registros
+                </div>
+            </div>
+        </div>
+    </div>
+</div>>

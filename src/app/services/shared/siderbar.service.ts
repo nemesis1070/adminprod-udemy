@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
+import { UsuarioService } from '../usuario/usuario.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SiderbarService {
 
-  menu: any = [
+  menu: any[] = [];
+
+/*   menu: any = [
     {
       titulo: 'Principal',
       icono: 'mdi mdi-gauge',
@@ -26,7 +29,14 @@ export class SiderbarService {
         {titulo: 'Medicos', url: '/medicos'}
       ]
     }
-  ];
+  ]; */
 
-  constructor() { }
+  constructor(public serusu: UsuarioService) {
+
+  }
+
+  cargarMenu() {
+    this.menu = this.serusu.menu;
+  }
+
 }

@@ -42,10 +42,15 @@
                 <!-- ============================================================== -->
                 <!-- Search -->
                 <!-- ============================================================== -->
-                <li class="nav-item hidden-xs-down search-box"> <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
-                    <form class="app-search">
-                        <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> </form>
-                </li>
+                <div class="form-inline my-2 my-lg-0">
+                    <input #input (keyup.enter)="buscar(input.value)" class="form-control mr-sm-2" type="text" placeholder="Buscar y Enter" aria-label="Search">
+                    <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+                </div>
+                <!--  <li class="nav-item hidden-xs-down search-box"> <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                    <div class="app-search">
+                        <input #input (keyup.enter)="buscar(input.value)" type="text" class="form-control" placeholder="Buscar y Enter"> <a class="srh-btn"><i class="ti-close"></i></a> </div>
+                </li> -->
+
                 <!-- ============================================================== -->
                 <!-- Messages -->
                 <!-- ============================================================== -->

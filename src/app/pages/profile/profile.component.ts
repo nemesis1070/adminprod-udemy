@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.usuario = this.serusu.usuario;
   }
 
   /* seleccionImagen(event) { */  // event obtiene toda la informacion del evento al cargar la imagen
@@ -64,6 +65,13 @@ export class ProfileComponent implements OnInit {
   datausuario.Google = this.usuario.Google;
 
   this.serusu.actualizarUsuario(datausuario)
-              .subscribe();
+              .subscribe(
+              result => {
+                console.log(result);
+                },
+              error => {
+                this.usuario.Email = '';
+                swal('Error actualizar usuario', 'Validacion de usuario fallida: ' + error.error.mensaje , 'error');
+              });
    }
 }
